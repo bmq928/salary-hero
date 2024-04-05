@@ -1,22 +1,24 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-
-import { AppModule } from './app/app.module';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common'
+import { ConfigType } from '@nestjs/config'
+import { NestFactory } from '@nestjs/core'
+import { DataSource } from 'typeorm'
+import { AppModule } from './app.module'
+import { baseConfig } from './config'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
-  Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
-  );
+  const app = await NestFactory.create(AppModule)
+  const { host, port, basePath }: ConfigType<typeof baseConfig> = app.get(
+    baseConfig.KEY
+  )
+  const ds = app.get(DataSource)
+  await ds.runMigrations()
+
+  app.setGlobalPrefix(basePath)
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' })
+  app.useGlobalPipes(new ValidationPipe({ transform: true }))
+
+  await app.listen(port, host)
+  Logger.log(`running on: http://localhost:${port}${basePath}`)
 }
 
-bootstrap();
+bootstrap()

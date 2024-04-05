@@ -1,19 +1,26 @@
-const { NxWebpackPlugin } = require('@nx/webpack');
-const { join } = require('path');
+const { NxWebpackPlugin } = require('@nx/webpack')
+const { join } = require('path')
+const isProd = process.env['NX_OPTS_GENERATE_PACKAGE_JSON'] === 'true'
+const isBuildOrmDs = process.env['NX_OPTS_TYPEORM_DATASOURCE_BUILD'] === 'true'
+
+const outputDir = isBuildOrmDs ? 'typeorm-datasource' : 'apps'
+const entryFile = isBuildOrmDs ? 'ormconfig.ts' : 'main.ts'
 
 module.exports = {
   output: {
-    path: join(__dirname, '../../dist/apps/backend'),
+    path: join(__dirname, `../../dist/${outputDir}/backend`),
+    libraryTarget: 'commonjs', // this allow built file container export default (to run typeorm datasource)
   },
   plugins: [
     new NxWebpackPlugin({
       target: 'node',
       compiler: 'tsc',
-      main: './src/main.ts',
+      main: `./src/${entryFile}`,
       tsConfig: './tsconfig.app.json',
-      assets: ['./src/assets'],
       optimization: false,
       outputHashing: 'none',
+      ...(isProd ? { generatePackageJson: true } : {}),
+      transformers: [],
     }),
   ],
-};
+}

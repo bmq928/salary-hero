@@ -19,6 +19,54 @@
           "buildTarget": "backend:build:production"
         }
       }
+    },
+    "migration:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "commands": [
+          {
+            "command": "NX_OPTS_TYPEORM_DATASOURCE_BUILD=true nx build backend",
+            "description": "build datasource from ts -> js"
+          },
+          {
+            "command": "typeorm migration:generate -d dist/typeorm-datasource/backend/main.js apps/backend/migrations/{args.name}",
+            "description": "run actual migration generate, should pass --name (e.g: pn nx migration:generate backend --name Init)"
+          }
+        ]
+      }
+    },
+    "migration:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "commands": [
+          {
+            "command": "NX_OPTS_TYPEORM_DATASOURCE_BUILD=true nx build backend",
+            "description": "build datasource from ts -> js"
+          },
+          {
+            "command": "typeorm migration:run -t -d dist/typeorm-datasource/backend/main.js",
+            "description": "run actual migration run"
+          }
+        ]
+      }
+    },
+    "migration:revert": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "commands": [
+          {
+            "command": "NX_OPTS_TYPEORM_DATASOURCE_BUILD=true nx build backend",
+            "description": "build datasource from ts -> js"
+          },
+          {
+            "command": "typeorm migration:revert -t -d dist/typeorm-datasource/backend/main.js",
+            "description": "run actual migration revert"
+          }
+        ]
+      }
     }
   }
 }
