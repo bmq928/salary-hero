@@ -14,6 +14,12 @@ export enum SalaryType {
   DAILY = 'DAILY',
 }
 
+export enum CurrencyCode {
+  USD = 'USD',
+  VND = 'VND',
+  THB = 'THB',
+}
+
 @Entity()
 export class WorkerEntity {
   @PrimaryColumn('uuid')
@@ -24,6 +30,9 @@ export class WorkerEntity {
 
   @Column()
   balance: number
+
+  @Column({ enum: CurrencyCode })
+  currency: CurrencyCode
 
   @Index()
   @CreateDateColumn({ type: 'timestamptz', default: 'NOW()', update: false })
