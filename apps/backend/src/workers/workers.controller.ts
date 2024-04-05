@@ -1,8 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { plainToInstance } from 'class-transformer'
-import { CreateWorkerDto } from './dto'
-import { PaginatedQueryDto } from './dto/paginated.dto'
+import { CreateWorkerDto, PaginatedQueryDto } from './dto'
 import { WorkerPaginatedResponse, WorkerResponse } from './workers.response'
 import { WorkersService } from './workers.service'
 
@@ -21,7 +20,7 @@ export class WorkersController {
     )
   }
 
-  @Post(':id')
+  @Post()
   create(@Body() body: CreateWorkerDto): Promise<WorkerResponse> {
     return this.workersService
       .create(body)

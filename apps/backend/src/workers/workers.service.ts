@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { CreateWorkerDto } from './dto'
-import { PaginatedQueryDto } from './dto/paginated.dto'
+import { CreateWorkerDto, PaginatedQueryDto } from './dto'
 import { WorkerEntity } from './worker.entity'
 
 @Injectable()
