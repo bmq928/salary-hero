@@ -35,7 +35,7 @@ export class BalancesProcessor {
   ) {}
 
   @Process(JOB_BALANCES_CHUNK_BIG_JOB)
-  async chunkBigJob(job: Job<unknown>): Promise<void> {
+  async chunkBigJob(): Promise<void> {
     const total = await this.workersRepo.count()
     const chunkSize = Math.floor(total / this.batchEnv.workerParallelNumber)
     const chunks = _.range(0, total, chunkSize)
