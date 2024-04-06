@@ -10,6 +10,10 @@ import {
   TYPEORM_CONFIG_TOKEN,
   baseConfig,
   baseConfigSchema,
+  batchConfig,
+  batchConfigSchema,
+  bullConfig,
+  bullConfigSchema,
   typeormConfig,
   typeormConfigSchema,
 } from './config'
@@ -21,11 +25,13 @@ import { WorkersModule } from './workers'
     WorkersModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [baseConfig, typeormConfig],
+      load: [baseConfig, typeormConfig, bullConfig, batchConfig],
       validationSchema: joi
         .object()
         .concat(baseConfigSchema)
-        .concat(typeormConfigSchema),
+        .concat(typeormConfigSchema)
+        .concat(bullConfigSchema)
+        .concat(batchConfigSchema),
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
@@ -42,6 +48,7 @@ import { WorkersModule } from './workers'
           port: configService.get<BullConfig>(BULL_CONFIG_TOKEN).port,
         },
       }),
+      inject: [ConfigService],
     }),
   ],
 })

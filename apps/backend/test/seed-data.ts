@@ -6,6 +6,7 @@ export const genFakeWorkers = (num = 12): WorkerEntity[] =>
   _.range(num).map(() => ({
     id: faker.string.uuid(),
     balance: faker.number.int({ min: 0, max: 100000 }),
+    salary: faker.number.int({ min: 0, max: 100000 }),
     currency: faker.helpers.arrayElement(Object.values(CurrencyCode)),
     salaryType: faker.helpers.arrayElement(Object.values(SalaryType)),
     createdAt: faker.date.past(),

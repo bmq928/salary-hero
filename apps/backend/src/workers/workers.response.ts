@@ -4,6 +4,7 @@ import { CurrencyCode, SalaryType, WorkerEntity } from './worker.entity'
 
 export class WorkerResponse implements WorkerEntity {
   id: string
+  salary: number
   salaryType: SalaryType
   balance: number
   currency: CurrencyCode

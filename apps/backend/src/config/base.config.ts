@@ -21,7 +21,7 @@ export const baseConfig = registerAs(
 )
 
 export const baseConfigSchema = joi.object({
-  PORT: joi.number().less(4000).greater(2999).default(3000),
+  PORT: joi.number().port().default(3000),
   HOST: joi.string().hostname().default('0.0.0.0'),
   BASE_PATH: joi.string().default('/'),
   NODE_ENV: joi

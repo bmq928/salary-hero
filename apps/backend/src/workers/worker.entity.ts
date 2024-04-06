@@ -29,6 +29,9 @@ export class WorkerEntity {
   salaryType: SalaryType
 
   @Column()
+  salary: number
+
+  @Column()
   balance: number
 
   @Column({ enum: CurrencyCode })

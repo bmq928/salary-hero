@@ -10,7 +10,7 @@ import { testState } from './setup'
 const genDto = (num: number, idMembers?: string[]): CreateWorkerDto[] =>
   seedData
     .genFakeWorkers(num)
-    .map((o) => _.pick(o, ['currency', 'balance', 'salaryType']))
+    .map((o) => _.pick(o, ['currency', 'balance', 'salaryType', 'salary']))
 
 describe.each(['/v1/workers'])('[POST] %s', (baseUrl: string) => {
   it.each(
