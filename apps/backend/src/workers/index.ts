@@ -1,4 +1,6 @@
+export * from './dto'
 export * from './worker.entity'
-export * from './workers.consumer'
 export * from './workers.controller'
+export * from './workers.module'
+export * from './workers.response'
 export * from './workers.service'
