@@ -38,10 +38,7 @@ beforeAll(async () => {
   testState = { app, pg: ds }
 })
 
-afterAll(async () => {
-  await testState.pg?.destroy()
-  await testState.app?.close()
-})
+afterAll(() => testState.app?.close())
 
 beforeEach(async () => {
   faker.seed(123)

@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker'
 import { HttpStatus } from '@nestjs/common'
 import * as _ from 'lodash'
 import request from 'supertest'
@@ -7,26 +6,23 @@ import { CreateWorkerDto } from '../src/workers/dto'
 import * as seedData from './seed-data'
 import { testState } from './setup'
 
-const genDto = (num: number, idMembers?: string[]): CreateWorkerDto[] =>
+const genDto = (num: number): CreateWorkerDto[] =>
   seedData
     .genFakeWorkers(num)
     .map((o) => _.pick(o, ['currency', 'balance', 'salaryType', 'salary']))
 
 describe.each(['/v1/workers'])('[POST] %s', (baseUrl: string) => {
-  it.each(
-    genDto(
-      3,
-      faker.helpers.arrayElements(seedData.workers).map((u) => u.id)
-    )
-  )('should create new entity when dto is valid \n%j', (dto: CreateWorkerDto) =>
-    request(testState.app?.getHttpServer())
-      .post(baseUrl)
-      .send(dto)
-      .then(() =>
-        expect(
-          testState.pg?.getRepository(WorkerEntity).countBy(dto)
-        ).resolves.toBe(1)
-      )
+  it.each(genDto(3))(
+    'should create new entity when dto is valid \n%j',
+    (dto: CreateWorkerDto) =>
+      request(testState.app?.getHttpServer())
+        .post(baseUrl)
+        .send(dto)
+        .then(() =>
+          expect(
+            testState.pg?.getRepository(WorkerEntity).countBy(dto)
+          ).resolves.toBe(1)
+        )
   )
 
   it.each(genDto(3))(
