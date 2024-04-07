@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import * as joi from 'joi'
 import { DataSourceOptions } from 'typeorm'
+import { BalancesModule } from './balances'
 import {
   BULL_CONFIG_TOKEN,
   BullConfig,
@@ -23,6 +24,7 @@ import { WorkersModule } from './workers'
 @Module({
   imports: [
     WorkersModule,
+    BalancesModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [baseConfig, typeormConfig, bullConfig, batchConfig],

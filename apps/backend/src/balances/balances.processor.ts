@@ -1,5 +1,5 @@
 import { InjectQueue, Process, Processor } from '@nestjs/bull'
-import { Inject } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { ConfigType } from '@nestjs/config'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Job, Queue } from 'bull'
@@ -7,6 +7,7 @@ import {
   differenceInDays,
   format,
   getDaysInMonth,
+  startOfDay,
   startOfToday,
 } from 'date-fns'
 import * as _ from 'lodash'
@@ -24,10 +25,11 @@ type HandleBalancePayload = {
   limit: number
 }
 
+@Injectable()
 @Processor(BALANCES_QUEUE)
 export class BalancesProcessor {
   constructor(
-    @Inject(batchConfig)
+    @Inject(batchConfig.KEY)
     private readonly batchEnv: ConfigType<typeof batchConfig>,
     @InjectRepository(WorkerEntity)
     private readonly workersRepo: Repository<WorkerEntity>,
@@ -73,7 +75,10 @@ export class BalancesProcessor {
         order: { createdAt: 'desc' },
       })
       const updatingWorkers = batch
-        .map((w) => [w, differenceInDays(w.updatedAt, updateTime)] as const)
+        .map(
+          (w) =>
+            [w, differenceInDays(startOfDay(w.updatedAt), updateTime)] as const
+        )
         .filter(([, workDays]) => workDays > 0)
         .map(([entity, workDays]) =>
           this.workersRepo.create({
