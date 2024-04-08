@@ -74,6 +74,8 @@ export class BalancesProcessor {
         skip: offset,
         order: { createdAt: 'desc' },
       })
+      if (!batch.length) return
+
       const updatingWorkers = batch
         .map(
           (w) =>
